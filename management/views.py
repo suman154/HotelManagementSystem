@@ -14,7 +14,7 @@ class RoomTypeView(ModelViewSet):
     serializer_class = RoomTypeSerializer
 
 
-class RoomView(ModelViewSet):
+class RoomView(GenericAPIView):
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
 
@@ -33,3 +33,29 @@ def post(self,request):
     else:
         return Response(serializer.errors)
     
+
+class RoomEditView(GenericAPIView):
+    queryset = Room.objects.all()
+    serializer_class = RoomSerializer
+
+
+    def get(self,request,pk):
+        room_obj = Room.objects.get(id=pk)
+        seriaizer = RoomSerializer(room_obj)
+        return Response(seriaizer.data)
+
+
+    def put(self,request,pk):
+        room_obj = Room.objects.get(id=pk)
+        serializer = RoomSerializer(room_obj,data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors)
+        
+
+    def delete(self,request,pk):
+        room_obj = Room.objects.get(id=pk)
+        room_obj.delete()
+        return Response("Data Deleted")
