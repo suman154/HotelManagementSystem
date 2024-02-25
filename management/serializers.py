@@ -1,5 +1,11 @@
 from rest_framework import serializers
-from .models import RoomType, Room
+from .models import RoomType, Room, User
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class meta:
+        model = User
+        fields = ['email', 'password']
 
 class RoomTypeSerializer(serializers.ModelSerializer):
     class Meta:

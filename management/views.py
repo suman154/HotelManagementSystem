@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import GenericAPIView
-from .models import RoomType,Room
-from .serializers import RoomTypeSerializer, RoomSerializer
+from .models import RoomType,Room,User
+from .serializers import RoomTypeSerializer, RoomSerializer, UserSerializer
 from rest_framework.response import Response
 
 def list(self,request):
@@ -59,3 +59,19 @@ class RoomEditView(GenericAPIView):
         room_obj = Room.objects.get(id=pk)
         room_obj.delete()
         return Response("Data Deleted")
+    
+
+class UserView(ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    def register(self,request):
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save
+            return Response('user created')
+        else:
+            return Response(serializer.errors)
+        
+    def login(self,request):
+        pass
