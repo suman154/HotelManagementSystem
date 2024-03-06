@@ -10,6 +10,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny
 from django.contrib.auth.models import Group
 from rest_framework.permissions import DjangoModelPermissions
+from rest_framework import filters
 
 # Create your views here.
 class GroupView(ModelViewSet):
@@ -20,6 +21,8 @@ class GroupView(ModelViewSet):
 class RoomTypeView(ModelViewSet):
     queryset = RoomType.objects.all()
     serializer_class = RoomTypeSerializer
+    filterset_fields = ['type']
+    search_fields = ['name','description']
 
 
 # class RoomView(ModelViewSet):
@@ -29,10 +32,13 @@ class RoomTypeView(ModelViewSet):
 class RoomView(GenericAPIView):
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
+    filterset_fields = ['type']
+    search_fields = ['name','description']
 
     def get(self,request):
         room_objs =  Room.objects.all()
-        serializer = RoomSerializer(room_objs,many=True)
+        filter_obj = self.filter_queryset(room_objs)
+        serializer = RoomSerializer(filter_obj,many=True)
         return Response(serializer.data)
     
     def post(self,request):
